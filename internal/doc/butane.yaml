@@ -354,6 +354,19 @@ root:
           children:
             - name: devices
               desc: the list of whole-disk devices (not partitions) to include in the disk array, referenced by their absolute path. At least two devices must be specified.
+    - name: grub
+      after: $
+      desc: describes the desired GRUB bootloader configuration.
+      children:
+        - name: users
+          desc: the list of GRUB superusers.
+          children:
+            - name: name
+              desc: the user name.
+            - name: password_hash
+              desc: the PBKDF2 password hash, generated with `grub2-mkpasswd-pbkdf2`.
+              # required by validation
+              required: true
     - name: openshift
       after: $
       desc: describes miscellaneous OpenShift configuration. Respected when rendering to a MachineConfig, ignored when rendering directly to an Ignition config.

@@ -100,8 +100,6 @@ var (
 		// link support in the MCO, consider what should happen if
 		// the user specifies a storage.tree that includes symlinks.
 		"spec.config.storage.links": common.ErrLinkSupport,
-		// FORBIDDEN
-		"spec.config.grub": common.ErrGrubConfigSupport,
 	})
 )
 

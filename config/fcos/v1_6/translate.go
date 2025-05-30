@@ -55,9 +55,21 @@ const (
 	bootV1SizeMiB     = 384
 )
 
+var (
+	// Only used for the openshift variant
+	fieldFilters = cutil.NewFilters(types.Config{}, cutil.FilterMap{
+		// FORBIDDEN
+		"spec.config.grub": common.ErrGrubConfigSupport,
+	})
+)
+
 // Return FieldFilters for this spec.
 func (c Config) FieldFilters() *cutil.FieldFilters {
-	return nil
+	if c.Variant == "openshift" {
+		return &fieldFilters
+	} else {
+		return nil
+	}
 }
 
 // ToIgn3_5Unvalidated translates the config to an Ignition config.  It also
@@ -85,10 +97,14 @@ func (c Config) ToIgn3_5Unvalidated(options common.TranslateOptions) (types.Conf
 		}
 	}
 
-	retp, tsp, rp := c.handleUserGrubCfg(options)
-	retConfig, ts := baseutil.MergeTranslatedConfigs(retp, tsp, ret, ts)
-	ret = retConfig.(types.Config)
-	r.Merge(rp)
+	if c.Variant != "openshift" {
+		var retConfig types.C
+		retp, tsp, rp := c.handleUserGrubCfg(options)
+		retConfig, ts = baseutil.MergeTranslatedConfigs(retp, tsp, ret, ts)
+		ret = retConfig.(types.Config)
+		r.Merge(rp)
+	}
+
 	return ret, ts, r
 }
 

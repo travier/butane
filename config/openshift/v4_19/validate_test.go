@@ -230,6 +230,22 @@ func TestValidateConfig(t *testing.T) {
 			common.ErrMissingKernelArgumentCex,
 			path.New("yaml", "openshift", "kernel_arguments"),
 		},
+		{
+			Config{
+				Config: fcos.Config{
+					Grub: fcos.Grub{
+						Users: []fcos.GrubUser{
+							fcos.GrubUser{
+								Name:         "foo",
+								PasswordHash: util.StrToPtr("foo"),
+							},
+						},
+					},
+				},
+			},
+			common.ErrGrubConfigSupport,
+			path.New("yaml", "grub"),
+		},
 	}
 
 	for i, test := range tests {

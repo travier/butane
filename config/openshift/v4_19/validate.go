@@ -63,6 +63,8 @@ func (conf Config) Validate(c path.ContextPath) (r report.Report) {
 	if cex && !slices.Contains(conf.OpenShift.KernelArguments, "rd.luks.key=/etc/luks/cex.key") {
 		r.AddOnError(c.Append("openshift", "kernel_arguments"), common.ErrMissingKernelArgumentCex)
 	}
-
+	if len(conf.Grub.Users) != 0 {
+		r.AddOnError(c.Append("grub"), common.ErrGrubConfigSupport)
+	}
 	return
 }
